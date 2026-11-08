@@ -3,7 +3,7 @@
 My Xiaomi Mi TV (MiTV-AXSO2, Android TV 11) was slow and full of ads. Over wireless ADB I:
 
 - **Backed up** every package and system setting before touching anything
-- **Disabled 25 ad, telemetry and bloatware packages** one at a time, with an automatic crash check after each (rolls back on failure). Nothing is uninstalled.
+- **Disabled 29 ad, telemetry and bloatware packages** one at a time, with an automatic crash check after each (rolls back on failure). Nothing is uninstalled.
 - **Replaced the home screen** with a custom Apple TV-style launcher: a frosted-glass dock of favourite apps over rotating public-domain nature wallpapers, with **zero permissions**: no internet, no location, no tracking.
 - **Wrote a one-command restore** (with a dry-run mode) that undoes every change
 
