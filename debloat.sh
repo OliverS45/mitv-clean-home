@@ -3,8 +3,7 @@
 # Usage: ./debloat.sh [--dry-run] [list-file]   (default list: debloat.txt)
 # Every package actually disabled is appended to state/disabled.log for restore.sh.
 set -uo pipefail
-cd "$(dirname "$0")"
-: "${ANDROID_SERIAL:?set it to your TV address first, e.g. export ANDROID_SERIAL=<tv-ip>:5555}"; export ANDROID_SERIAL
+. "$(dirname "$0")/lib.sh"
 
 DRY=0
 [ "${1:-}" = "--dry-run" ] && { DRY=1; shift; }
@@ -15,10 +14,9 @@ mkdir -p state
 # Processes that must stay alive after each disable, or we roll back.
 CRITICAL="system_server com.android.systemui"
 
-adb get-state >/dev/null 2>&1 || adb connect "$ANDROID_SERIAL" >/dev/null
-[ "$(adb get-state 2>/dev/null)" = device ] || { echo "TV not connected"; exit 1; }
+connect_tv
 
-grep -vE '^\s*(#|$)' "$LIST" | awk '{print $1}' | while read -r pkg <&3; do
+list_packages "$LIST" | while read -r pkg <&3; do
   if ! adb shell pm list packages "$pkg" | grep -qx "package:$pkg"; then
     echo "skip   $pkg (not installed)"; continue
   fi

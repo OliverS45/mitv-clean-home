@@ -2,20 +2,19 @@
 # Undo everything: re-enable every package debloat.sh disabled and restore the
 # original home launcher. Usage: ./restore.sh [--dry-run]
 set -uo pipefail
-cd "$(dirname "$0")"
-: "${ANDROID_SERIAL:?set it to your TV address first, e.g. export ANDROID_SERIAL=<tv-ip>:5555}"; export ANDROID_SERIAL
+. "$(dirname "$0")/lib.sh"
 
 DRY=0
 [ "${1:-}" = "--dry-run" ] && DRY=1
-run() { if [ $DRY = 1 ]; then echo "would: adb $*"; else adb "$@"; fi; }
 
-adb get-state >/dev/null 2>&1 || adb connect "$ANDROID_SERIAL" >/dev/null
-[ "$(adb get-state 2>/dev/null)" = device ] || { echo "TV not connected"; exit 1; }
+connect_tv
 
 LOG=state/disabled.log
 if [ -s "$LOG" ]; then
   left=""   # packages that failed to re-enable stay in the log, so a re-run retries them
-  for pkg in $(sort -u "$LOG"); do run shell pm enable "$pkg" </dev/null || left="$left$pkg"$'\n'; done
+  while read -r pkg; do
+    run shell pm enable "$pkg" </dev/null || left="$left$pkg"$'\n'
+  done < <(sort -u "$LOG")
   [ $DRY = 0 ] && printf '%s' "$left" > "$LOG"
   [ -n "$left" ] && printf 'could not re-enable (kept in %s, re-run to retry):\n%s' "$LOG" "$left"
 else

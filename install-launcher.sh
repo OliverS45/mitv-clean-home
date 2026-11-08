@@ -3,8 +3,7 @@
 # Usage: ./install-launcher.sh [--no-build]
 # Undo with ./restore.sh (re-selects the original launcher and uninstalls this one).
 set -euo pipefail
-cd "$(dirname "$0")"
-: "${ANDROID_SERIAL:?set it to your TV address first, e.g. export ANDROID_SERIAL=<tv-ip>:5555}"; export ANDROID_SERIAL
+. "$(dirname "$0")/lib.sh"
 # JDK 17: use JAVA_HOME if set, else Homebrew's openjdk@17 if present, else whatever `java` is on PATH.
 [ -z "${JAVA_HOME:-}" ] && [ -d /opt/homebrew/opt/openjdk@17 ] && export JAVA_HOME=/opt/homebrew/opt/openjdk@17
 GRADLE="${GRADLE:-gradle}"   # Gradle 8.x (brew install gradle@8)
@@ -25,8 +24,7 @@ if [ "${1:-}" != "--no-build" ]; then
   (cd launcher && "$GRADLE" assembleDebug -q --console=plain)
 fi
 
-adb get-state >/dev/null 2>&1 || adb connect "$ANDROID_SERIAL" >/dev/null || true
-[ "$(adb get-state 2>/dev/null)" = device ] || { echo "TV not connected"; exit 1; }
+connect_tv
 adb install -r "$APK"
 adb shell cmd package set-home-activity --user 0 "$HOME_ACTIVITY"
 adb shell input keyevent KEYCODE_HOME

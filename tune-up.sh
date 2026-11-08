@@ -7,8 +7,7 @@
 # Prints free storage and RAM before and after. Safe to run any time; the cache refills as you use apps.
 # Usage: ./tune-up.sh [--dry-run] [--optimize]
 set -uo pipefail
-cd "$(dirname "$0")"
-: "${ANDROID_SERIAL:?set it to your TV address first, e.g. export ANDROID_SERIAL=<tv-ip>:5555}"; export ANDROID_SERIAL
+. "$(dirname "$0")/lib.sh"
 
 DRY=0 OPT=0
 for a in "$@"; do
@@ -18,10 +17,8 @@ for a in "$@"; do
     *) echo "unknown option: $a"; exit 1 ;;
   esac
 done
-run() { if [ $DRY = 1 ]; then echo "would: adb $*"; else adb "$@"; fi; }
 
-adb get-state >/dev/null 2>&1 || adb connect "$ANDROID_SERIAL" >/dev/null
-[ "$(adb get-state 2>/dev/null)" = device ] || { echo "TV not connected"; exit 1; }
+connect_tv
 
 report() {
   local free ram
