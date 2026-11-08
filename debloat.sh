@@ -37,12 +37,12 @@ grep -vE '^\s*(#|$)' "$LIST" | awk '{print $1}' | while read -r pkg <&3; do
 
   bad=""
   for p in $CRITICAL; do adb shell pidof "$p" >/dev/null || bad="$bad $p died;"; done
-  crashes=$(adb logcat -b crash -d | grep -E 'FATAL EXCEPTION|Process:' | grep -v "$pkg" | head -3)
+  crashes=$(adb logcat -b crash -d | grep -E 'FATAL EXCEPTION|Process:' | grep -vF "$pkg" | head -3)
   [ -n "$crashes" ] && bad="$bad crash: $crashes"
 
   if [ -n "$bad" ]; then
     adb shell pm enable "$pkg" >/dev/null
-    sed -i '' "/^${pkg//./\\.}\$/d" "$LOG"
+    grep -vxF "$pkg" "$LOG" > "$LOG.tmp"; mv "$LOG.tmp" "$LOG"
     echo "ROLLBK $pkg ->$bad"
   else
     echo "off    $pkg"
