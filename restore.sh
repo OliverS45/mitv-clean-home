@@ -14,15 +14,17 @@ adb get-state >/dev/null 2>&1 || adb connect "$ANDROID_SERIAL" >/dev/null
 
 LOG=state/disabled.log
 if [ -s "$LOG" ]; then
-  for pkg in $(sort -u "$LOG"); do run shell pm enable "$pkg" </dev/null; done
-  [ $DRY = 0 ] && : > "$LOG"
+  left=""   # packages that failed to re-enable stay in the log, so a re-run retries them
+  for pkg in $(sort -u "$LOG"); do run shell pm enable "$pkg" </dev/null || left="$left$pkg"$'\n'; done
+  [ $DRY = 0 ] && printf '%s' "$left" > "$LOG"
+  [ -n "$left" ] && printf 'could not re-enable (kept in %s, re-run to retry):\n%s' "$LOG" "$left"
 else
   echo "nothing to re-enable"
 fi
 
 # Put the original launcher back as default (recorded in the first backup).
 ORIG=$(cat backup/*/home_launcher.txt 2>/dev/null | grep / | head -1)
-[ -n "$ORIG" ] && run shell cmd package set-home-activity "$ORIG"
+[ -n "$ORIG" ] && run shell cmd package set-home-activity --user 0 "$ORIG"
 # Remove the custom launcher if it was installed (it's ours, not a system app).
 if adb shell pm list packages com.aryan.home | grep -q .; then
   run uninstall com.aryan.home
