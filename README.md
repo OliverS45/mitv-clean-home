@@ -24,6 +24,7 @@ Kept on purpose: Xiaomi OTA (security updates), HDMI / Live TV inputs, Chromecas
 |---|---|
 | `debloat.txt` | The package list, grouped and commented. Edit to taste. |
 | `debloat.sh [--dry-run]` | Disables each package (`pm disable-user`), checks for crashes, rolls back if anything breaks, logs to `state/disabled.log` |
+| `find-bloat.sh` | Read-only: lists packages still enabled on the TV that `debloat.txt` doesn't cover, likely ads/tracking first |
 | `restore.sh [--dry-run]` | Re-enables everything in the log, restores the original launcher, uninstalls the custom one |
 | `install-launcher.sh` | Builds the launcher and sets it as the default home screen |
 | `launcher/` | The launcher (Java). Dock apps, hidden apps and wallpaper interval live in `app/src/main/res/values/config.xml` |
@@ -43,6 +44,7 @@ adb connect $ANDROID_SERIAL            # accept the prompt on the TV
 mkdir -p backup/now && adb shell pm list packages -f > backup/now/packages_all.txt   # back up first
 ./debloat.sh --dry-run && ./debloat.sh
 ./install-launcher.sh
+./find-bloat.sh                        # optional: see what else is still enabled
 
 ./restore.sh --dry-run                 # undo everything
 ```
