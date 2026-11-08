@@ -27,6 +27,7 @@ Kept on purpose: Xiaomi OTA (security updates), HDMI / Live TV inputs, Chromecas
 | `find-bloat.sh` | Read-only: lists packages still enabled on the TV that `debloat.txt` doesn't cover, likely ads/tracking first |
 | `tune-up.sh [--dry-run] [--optimize]` | Clears app caches and stops background apps (no app data touched), shows free storage/RAM before and after. `--optimize` also recompiles apps, which helps after an OTA update |
 | `restore.sh [--dry-run]` | Re-enables everything in the log, restores the original launcher, uninstalls the custom one |
+| `lib.sh` | Shared setup the scripts source: checks `ANDROID_SERIAL`, connects to the TV, dry-run helper |
 | `install-launcher.sh` | Builds the launcher and sets it as the default home screen |
 | `launcher/` | The launcher (Java). Dock apps, hidden apps and wallpaper interval live in `app/src/main/res/values/config.xml` |
 
