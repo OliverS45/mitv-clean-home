@@ -16,6 +16,7 @@ com.xm.webcontent
 # Silent partner-app installers
 android.autoinstalls.config.xiaomi.amelie
 android.autoinstalls.config.xioami.dangal
+com.google.android.partnersetup
 
 # Bloat
 com.xiaomi.floatingframe
@@ -29,6 +30,11 @@ com.mitv.gallery
 
 # Google Assistant (voice search on remote stops working)
 com.google.android.katniss
+com.google.android.speech.pumpkin
+
+# Printing (no printer on a TV)
+com.android.printspooler
+com.android.bips
 
 # Streaming / media apps not used
 com.balaji.alt.partner
@@ -41,3 +47,9 @@ app.netmirror.newtv
 # The Google TV launcher has a higher HOME priority than any user app, so it must be off.
 com.mitv.tvhome.atv
 com.google.android.tvlauncher
+
+# Optional: remove the '#' to disable these too if you don't use them.
+# com.google.android.youtube.tvmusic      # YouTube Music
+# com.google.android.youtube.tvkids       # YouTube Kids
+
+# Looking for more? ./find-bloat.sh lists what is still enabled on the TV.
