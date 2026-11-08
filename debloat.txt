@@ -52,4 +52,24 @@ com.google.android.tvlauncher
 # com.google.android.youtube.tvmusic      # YouTube Music
 # com.google.android.youtube.tvkids       # YouTube Kids
 
+# More candidates, NOT yet checked against this TV: picked from what is common on
+# Xiaomi / Android TV models. Packages the TV doesn't have are skipped by debloat.sh.
+# Run ./find-bloat.sh to see which of these are actually installed and enabled.
+#
+# Safe to disable: nothing else depends on these.
+# com.google.android.tv.bugreportsender   # sends bug reports to Google
+# com.google.android.leanbacklauncher.recommendations   # recommendation rows for the old Google launcher
+#
+# Only if you don't use the feature:
+# com.xiaomi.mitv.smartshare              # Xiaomi screen mirroring (Chromecast is separate and stays)
+# com.mitv.videoplayer                    # Xiaomi video player, used for videos on USB drives
+# com.xiaomi.mitv.mediaexplorer           # Xiaomi file browser for USB drives
+# com.google.android.marvin.talkback      # TalkBack screen reader (accessibility)
+# com.netflix.partner.activation          # Netflix button sign-in helper; the Netflix app itself still works
+#
+# Preinstalled streaming apps (Indian models): disable any you don't watch.
+# com.graymatrix.did                      # ZEE5
+# com.sonyliv                             # Sony LIV
+# com.spotify.tv.android                  # Spotify
+
 # Looking for more? ./find-bloat.sh lists what is still enabled on the TV.
